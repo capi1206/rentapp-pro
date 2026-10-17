@@ -1,0 +1,8 @@
+import {createClient} from "@/lib/supabase/server";
+import {redirect} from "next/navigation";
+export default async function Dashboard(){
+ const supabase=await createClient(); const {data:{user}}=await supabase.auth.getUser(); if(!user)redirect("/login");
+ const {data:products}=await supabase.from("products").select("*").order("created_at",{ascending:false}).limit(10);
+ const latest=products?.[0];
+ return <main className="shell"><aside><div className="logo">Rent<span>App</span></div><nav><a className="active">Dashboard</a><a href="/products">Productos</a><a href="/calculator">Rentabilidad</a><a href="/scenarios">Escenarios</a><a href="/goals">Metas</a><a href="/advisor">Asesor IA</a></nav></aside><section className="content"><header><div><h1>Dashboard</h1><p>La salud financiera de tu negocio en una sola vista.</p></div><span className="badge">PRO</span></header><div className="cards"><div><small>Productos</small><strong>{products?.length||0}</strong></div><div><small>Último producto</small><strong>{latest?.name||"—"}</strong></div><div><small>Margen</small><strong>{latest?Number(latest.margin*100).toFixed(1)+"%":"—"}</strong></div><div><small>Precio recomendado</small><strong>{latest?money(latest.recommended_price):"—"}</strong></div></div><div className="panel"><h2>Bienvenido a RentApp PRO</h2><p>Registra un producto para obtener costo real, margen, precio recomendado, punto de equilibrio y escenarios.</p><a className="button" href="/calculator">Analizar mi primer producto</a></div></section></main>}
+function money(n:number){return new Intl.NumberFormat("es-CO",{style:"currency",currency:"COP",maximumFractionDigits:0}).format(n||0)}

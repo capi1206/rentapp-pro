@@ -1,0 +1,19 @@
+# Dependencias
+node_modules/
+.pnp
+.pnp.js
+
+# Entornos de producción / desarrollo
+.env
+.env.local
+.env.*.local
+
+# Archivos de compilación de Next.js
+.next/
+out/
+
+# Logs y OS
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
